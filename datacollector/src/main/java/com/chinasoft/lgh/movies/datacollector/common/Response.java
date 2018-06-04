@@ -4,6 +4,9 @@ package com.chinasoft.lgh.movies.datacollector.common;
  * @author Administrator
  */
 public class Response<T> {
+
+    public static final String SUCCESS = "success";
+
     private T result;
     private boolean success;
     private String message;
@@ -20,6 +23,10 @@ public class Response<T> {
 
     public Response(String message) {
         this(null,false,message);
+    }
+
+    public Response(T result, boolean b) {
+        this(result,b,null);
     }
 
     public T getResult() {
