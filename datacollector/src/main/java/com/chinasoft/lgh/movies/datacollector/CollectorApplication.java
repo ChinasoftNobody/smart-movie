@@ -17,6 +17,7 @@ public class CollectorApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(CollectorApplication.class, args);
     }
+
     @Override
     protected SpringApplicationBuilder configure(
             SpringApplicationBuilder application) {

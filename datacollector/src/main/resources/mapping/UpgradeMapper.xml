@@ -3,11 +3,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.UpgradeMapper">
     <insert id="init">
-        CREATE TABLE IF NOT EXISTS t_upgrade(
-            id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-            source VARCHAR(128) NOT NULL DEFAULT '',
-            content TEXT ,
-            upgradeTime DATETIME DEFAULT now()
+        CREATE TABLE IF NOT EXISTS t_upgrade (
+            id          INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            source      VARCHAR(128) NOT NULL             DEFAULT '',
+            content     TEXT,
+            version     INT,
+            upgradeTime DATETIME                          DEFAULT now()
         );
     </insert>
+
+    <select id="getLatest" resultType="map">
+        SELECT version
+        FROM t_upgrade
+        ORDER BY id DESC
+        LIMIT 1;
+    </select>
 </mapper>
