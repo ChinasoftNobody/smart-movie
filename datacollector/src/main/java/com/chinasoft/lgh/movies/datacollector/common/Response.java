@@ -25,8 +25,8 @@ public class Response<T> {
         this(null,false,message);
     }
 
-    public Response(T result, boolean b) {
-        this(result,b,null);
+    public Response(T result, boolean success) {
+        this(result,success,null);
     }
 
     public T getResult() {

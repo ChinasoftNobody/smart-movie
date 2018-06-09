@@ -67,7 +67,7 @@ public class UpgradeProcessor implements ApplicationListener<ContextRefreshedEve
 
     private void processUpgrade(File file) {
         HashMap<String, Integer> map = upgradeMapper.getLatest();
-        int latest = (map == null ? 0 : map.get("id"));
+        int latest = (map == null ? 0 : map.get("version"));
         String fileName = file.getName();
         if (upgradePattern.matcher(fileName).matches()) {
             int version = Integer.valueOf(fileName.substring(fileName.indexOf('_') + 1, fileName.indexOf('.')));
