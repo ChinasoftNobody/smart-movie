@@ -8,7 +8,7 @@
             source      VARCHAR(128) NOT NULL             DEFAULT '',
             content     TEXT,
             version     INT,
-            upgradeTime DATETIME                          DEFAULT now()
+            upgradeTime timestamp                          DEFAULT current_timestamp
         );
     </insert>
 
