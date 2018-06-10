@@ -2,6 +2,7 @@ package com.chinasoft.lgh.movies.datacollector.service.impl;
 
 import com.chinasoft.lgh.movies.datacollector.collect.analyze.HtmlAnalyzer;
 import com.chinasoft.lgh.movies.datacollector.collect.path.PathConfigure;
+import com.chinasoft.lgh.movies.datacollector.collect.path.SubUrlMatcher;
 import com.chinasoft.lgh.movies.datacollector.common.CollectionException;
 import com.chinasoft.lgh.movies.datacollector.common.Response;
 import com.chinasoft.lgh.movies.datacollector.service.CollectorService;
@@ -27,10 +28,15 @@ public class CollectorServiceImpl implements CollectorService {
         if(StringUtils.isEmpty(url)){
             throw new CollectionException("url is empty");
         }
-        PathConfigure configure = new PathConfigure();
+        PathConfigure configure = new PathConfigure(new SubUrlMatcher() {
+            @Override
+            public boolean match(String subUrl) {
+                return subUrl.startsWith("/") && !subUrl.endsWith("/");
+            }
+        });
         List<String> stringList = new ArrayList<>();
-        stringList.add("table>tbody>tr");
-        configure.setDeep(100);
+        stringList.add(".co_content8>ul>table>tbody>tr");
+        configure.setDeep(5);
         configure.setStandardFirst(true);
         configure.setCssQuery(stringList);
         configure.setBaseUrl("http://www.ygdy8.com");

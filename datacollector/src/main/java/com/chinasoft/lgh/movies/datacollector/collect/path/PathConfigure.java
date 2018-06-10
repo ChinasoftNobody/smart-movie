@@ -1,6 +1,8 @@
 package com.chinasoft.lgh.movies.datacollector.collect.path;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Administrator
@@ -17,8 +19,20 @@ public class PathConfigure {
 
     private String baseUrl;
 
+    private SubUrlMatcher subUrlMatcher;
+
+    private Set<String> expiredUrl = new HashSet<>();
+
+    public PathConfigure(SubUrlMatcher subUrlMatcher) {
+        this.subUrlMatcher = subUrlMatcher;
+    }
+
     public void addDeep(){
         currentDeep += 1;
+    }
+
+    public void downDeep(){
+        currentDeep -= 1;
     }
 
     public String getBaseUrl() {
@@ -55,5 +69,21 @@ public class PathConfigure {
 
     public int getCurrentDeep() {
         return currentDeep;
+    }
+
+    public SubUrlMatcher getSubUrlMatcher() {
+        return subUrlMatcher;
+    }
+
+    public void setSubUrlMatcher(SubUrlMatcher subUrlMatcher) {
+        this.subUrlMatcher = subUrlMatcher;
+    }
+
+    public Set<String> getExpiredUrl() {
+        return expiredUrl;
+    }
+
+    public void setExpiredUrl(Set<String> expiredUrl) {
+        this.expiredUrl = expiredUrl;
     }
 }

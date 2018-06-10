@@ -52,7 +52,7 @@ public class HtmlAnalyzer implements Analyzer {
      * @param pathConfigure path configure
      */
     private List<String> resolveUrls(Document document, PathConfigure pathConfigure) {
-        if(document == null || pathConfigure.getCurrentDeep() < pathConfigure.getDeep()){
+        if(document == null || pathConfigure.getCurrentDeep() > pathConfigure.getDeep()){
             return null;
         }
         Elements elements = document.select("a");
@@ -64,8 +64,10 @@ public class HtmlAnalyzer implements Analyzer {
         while (elementIterator.hasNext()){
             Element element = elementIterator.next();
             String href = element.attr("href");
-            if(!StringUtils.isEmpty(href)){
-                urls.add(pathConfigure.getBaseUrl() + href);
+            String url = pathConfigure.getBaseUrl() + href;
+            if(!StringUtils.isEmpty(href) && pathConfigure.getSubUrlMatcher().match(href)
+                    && !pathConfigure.getExpiredUrl().contains(url)){
+                urls.add(url);
             }
         }
         pathConfigure.addDeep();

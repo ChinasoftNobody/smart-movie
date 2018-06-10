@@ -58,6 +58,7 @@ public class CollectWorker implements Runnable {
      */
     private void collect(String url) {
         LOG.info("url :" + url);
+        pathConfigure.getExpiredUrl().add(url);
         String result = restTemplate.execute(rootUrl, HttpMethod.GET, null, response -> {
             if (response.getStatusCode().equals(HttpStatus.OK)) {
                 LineNumberReader reader = new LineNumberReader(new InputStreamReader(response.getBody(), Charset.forName("gb2312")));
@@ -75,6 +76,7 @@ public class CollectWorker implements Runnable {
             List<String> urls = analyzer.analyze(result, pathConfigure);
             if(urls != null && !urls.isEmpty()){
                 for(String subUrl:urls){
+                    pathConfigure.downDeep();
                     collect(subUrl);
                 }
             }
