@@ -11,12 +11,16 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Administrator
  */
 @Service
 public class CollectorServiceImpl implements CollectorService {
+
+    private static final Pattern BASE_URL_PATTERN = Pattern.compile("(?<baseUrl> (http|https))");
 
     @Override
     public Response<String> collect(String url) throws CollectionException{
@@ -26,10 +30,25 @@ public class CollectorServiceImpl implements CollectorService {
         PathConfigure configure = new PathConfigure();
         List<String> stringList = new ArrayList<>();
         stringList.add("table>tbody>tr");
-        configure.setDeep(1);
+        configure.setDeep(100);
         configure.setStandardFirst(true);
         configure.setCssQuery(stringList);
+        configure.setBaseUrl("http://www.ygdy8.com");
         DataCollectorUtil.collectDataFromUrl(url,configure,new HtmlAnalyzer());
         return new Response<>("success",true);
+    }
+
+    /**
+     * resolve baseUrl
+     * @param url url
+     * @return baseUrl
+     */
+    private String resolveBaseUrl(String url) throws CollectionException{
+        Matcher matcher = BASE_URL_PATTERN.matcher(url);
+        if(!matcher.matches()){
+            throw new CollectionException("invalid url :"+ url);
+        }
+        matcher.group("baseUrl");
+        return null;
     }
 }

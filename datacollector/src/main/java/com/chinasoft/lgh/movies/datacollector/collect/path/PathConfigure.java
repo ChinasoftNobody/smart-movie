@@ -13,6 +13,22 @@ public class PathConfigure {
 
     private boolean standardFirst;
 
+    private int currentDeep;
+
+    private String baseUrl;
+
+    public void addDeep(){
+        currentDeep += 1;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
     public List<String> getCssQuery() {
         return cssQuery;
     }
@@ -35,5 +51,9 @@ public class PathConfigure {
 
     public void setStandardFirst(boolean standardFirst) {
         this.standardFirst = standardFirst;
+    }
+
+    public int getCurrentDeep() {
+        return currentDeep;
     }
 }

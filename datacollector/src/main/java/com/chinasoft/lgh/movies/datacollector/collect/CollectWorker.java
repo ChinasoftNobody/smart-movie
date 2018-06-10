@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -43,31 +44,42 @@ public class CollectWorker implements Runnable {
     public void run() {
         LOG.info("collection work start");
         try {
-            String result = restTemplate.execute(rootUrl, HttpMethod.GET, null, new ResponseExtractor<String>() {
-                @Override
-                public String extractData(ClientHttpResponse response) throws IOException {
-                    if (response.getStatusCode().equals(HttpStatus.OK)) {
-                        LineNumberReader reader = new LineNumberReader(new InputStreamReader(response.getBody(), Charset.forName("gb2312")));
-                        StringBuilder stringBuilder = new StringBuilder();
-                        String tempLine = null;
-                        while ((tempLine = reader.readLine()) != null){
-                            stringBuilder.append(tempLine);
-                        }
-                        return stringBuilder.toString();
-                    }
-                    LOG.info("parse result to document failed");
-                    return null;
-                }
-            });
-            if (!StringUtils.isEmpty(result)) {
-                analyzer.analyze(result, pathConfigure);
-                return;
-            }
-            LOG.info("parse result to document failed");
+            collect(rootUrl);
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error("collection work error for " + e.getMessage(), e);
         }
 
 
+    }
+
+    /**
+     * collect from url
+     * @param url url
+     */
+    private void collect(String url) {
+        LOG.info("url :" + url);
+        String result = restTemplate.execute(rootUrl, HttpMethod.GET, null, response -> {
+            if (response.getStatusCode().equals(HttpStatus.OK)) {
+                LineNumberReader reader = new LineNumberReader(new InputStreamReader(response.getBody(), Charset.forName("gb2312")));
+                StringBuilder stringBuilder = new StringBuilder();
+                String tempLine = null;
+                while ((tempLine = reader.readLine()) != null){
+                    stringBuilder.append(tempLine);
+                }
+                return stringBuilder.toString();
+            }
+            LOG.info("parse result to document failed");
+            return null;
+        });
+        if (!StringUtils.isEmpty(result)) {
+            List<String> urls = analyzer.analyze(result, pathConfigure);
+            if(urls != null && !urls.isEmpty()){
+                for(String subUrl:urls){
+                    collect(subUrl);
+                }
+            }
+            return;
+        }
+        LOG.info("parse result to document failed");
     }
 }

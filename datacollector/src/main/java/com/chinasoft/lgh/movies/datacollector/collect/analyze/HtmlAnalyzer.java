@@ -7,8 +7,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -18,7 +21,7 @@ public class HtmlAnalyzer implements Analyzer {
     private static final Log LOG = LogFactory.getLog(HtmlAnalyzer.class);
 
     @Override
-    public void analyze(String result, PathConfigure pathConfigure) {
+    public List<String> analyze(String result, PathConfigure pathConfigure) {
         LOG.info("analyze start...");
         Document document = Jsoup.parse(result);
         if (document == null) {
@@ -28,7 +31,7 @@ public class HtmlAnalyzer implements Analyzer {
             LOG.info("start execute query: " + cssQuery);
             Elements elements = document.select(cssQuery);
             if (elements == null) {
-                LOG.error("query : " + cssQuery + " match nothing");
+                LOG.info("query : " + cssQuery + " match nothing");
                 continue;
             }
             Iterator<Element> elementIterator = elements.iterator();
@@ -38,5 +41,34 @@ public class HtmlAnalyzer implements Analyzer {
             }
         }
 
+
+        return resolveUrls(document,pathConfigure);
+    }
+
+    /**
+     * resolve subUrls
+     * @return subUrls
+     * @param document document
+     * @param pathConfigure path configure
+     */
+    private List<String> resolveUrls(Document document, PathConfigure pathConfigure) {
+        if(document == null || pathConfigure.getCurrentDeep() < pathConfigure.getDeep()){
+            return null;
+        }
+        Elements elements = document.select("a");
+        if(elements == null){
+            return null;
+        }
+        List<String> urls = new ArrayList<>();
+        Iterator<Element> elementIterator = elements.iterator();
+        while (elementIterator.hasNext()){
+            Element element = elementIterator.next();
+            String href = element.attr("href");
+            if(!StringUtils.isEmpty(href)){
+                urls.add(pathConfigure.getBaseUrl() + href);
+            }
+        }
+        pathConfigure.addDeep();
+        return urls;
     }
 }
