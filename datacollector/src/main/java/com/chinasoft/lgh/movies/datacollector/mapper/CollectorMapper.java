@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
  * @author Administrator
  */
 @Repository
-public interface TestMapper {
+public interface CollectorMapper {
 
     Test test();
 }
