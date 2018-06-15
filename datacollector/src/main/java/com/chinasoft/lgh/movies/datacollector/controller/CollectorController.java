@@ -25,7 +25,7 @@ public class CollectorController {
     @PostMapping(value = "/url",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Response<String> url() throws CollectionException{
-        String rootUrl = "http://www.dytt8.net/";
+        String rootUrl = "http://www.ygdy8.com";
         return collectorService.collect(rootUrl);
     }
 }

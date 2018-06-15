@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.MovieMapper">
+    <!-- batch save movies -->
+    <insert id="saveBatch" parameterType="com.chinasoft.lgh.movies.datacollector.model.Movie">
+        insert into
+    </insert>
+</mapper>

@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 
 @SpringBootTest(classes = CollectorApplication.class)
 @RunWith(SpringRunner.class)
-public class CollectControllerTest {
+public class CollectControllerMovie {
 
     @Resource
     private CollectorService collectorService;
