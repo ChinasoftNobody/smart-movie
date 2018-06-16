@@ -85,7 +85,6 @@ public class HtmlAnalyzer implements Analyzer {
             LOG.error("soup parse HTML failed.");
         }
         for (String cssQuery : pathConfigure.getCssQuery()) {
-            LOG.info("start execute query: " + cssQuery);
             Elements elements = document.select(cssQuery);
             if (elements == null) {
                 LOG.info("query : " + cssQuery + " match nothing");
@@ -98,6 +97,20 @@ public class HtmlAnalyzer implements Analyzer {
             }
         }
 
+        if(!movies.isEmpty()){
+            if(movieService == null){
+                LOG.error("movie service is null, can not save movies");
+            }else {
+                List<Movie> movieList = new ArrayList<>(movies.size());
+                movieList.addAll(movies);
+                movieService.batchSave(movieList);
+            }
+
+        }
+        LOG.info("analyze end , extract " + movies.size() + " movies");
+        if(!movies.isEmpty()){
+            movies.clear();
+        }
 
         return resolveUrls(document,pathConfigure);
     }
@@ -110,7 +123,11 @@ public class HtmlAnalyzer implements Analyzer {
         if(element == null){
             return;
         }
-        String basicInfo = element.selectFirst("p").toString().replace("<br>","\n");
+        Element basicElement = element.selectFirst("p");
+        if(basicElement == null){
+            return;
+        }
+        String basicInfo = basicElement.toString().replace("<br>","\n");
         Element urlE = element.selectFirst("table>tbody>tr>td>a");
         int i = 0;
         if(basicInfo.indexOf('◎')>0){
@@ -127,7 +144,7 @@ public class HtmlAnalyzer implements Analyzer {
             String[] properties = basicInfo.split("◎");
             for(String property : properties){
                 property = property.trim();
-                if(StringUtils.isEmpty(property)){
+                if(!StringUtils.isEmpty(property)){
                     resolveBasicProperty(movie,property);
                 }
             }
@@ -137,16 +154,7 @@ public class HtmlAnalyzer implements Analyzer {
             movies.add(movie);
         }
 
-        if(movies.size() == 1000){
-            if(movieService == null){
-                LOG.error("movie service is null, can not save movies");
-                return;
-            }
-            List<Movie> movieList = new ArrayList<>(movies.size());
-            movieList.addAll(movies);
-            movieService.batchSave(movieList);
-            movies.clear();
-        }
+
     }
 
     /**
@@ -157,7 +165,11 @@ public class HtmlAnalyzer implements Analyzer {
     private void resolveBasicProperty(Movie movie, String property) {
         for (BasicInfoEnum basicInfoEnum:BasicInfoEnum.values()){
             if(property.startsWith(basicInfoEnum.value)){
-                property = property.substring(property.indexOf(basicInfoEnum.value));
+                property = property.substring(basicInfoEnum.value.length());
+                property = property.trim();
+                if(property.length()> 1000){
+                    continue;
+                }
                 switch (basicInfoEnum){
                     case name:
                         movie.setName(property);

@@ -18,4 +18,12 @@
         ORDER BY id DESC
         LIMIT 1;
     </select>
+
+    <insert id="executeSql">
+        ${sql}
+    </insert>
+
+    <insert id="upgradeVersion">
+        INSERT INTO t_upgrade(source,content,version)VALUES (#{fileName,jdbcType=VARCHAR},#{sql,jdbcType=VARCHAR},#{version,jdbcType=INTEGER});
+    </insert>
 </mapper>

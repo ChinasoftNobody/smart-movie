@@ -1,3 +1,22 @@
-drop table if exists t_movie(
-  id varchar()
+create table if not exists t_movie(
+id varchar(64) primary key ,
+`name` varchar(256),
+translateName varchar(256),
+age varchar(256),
+region varchar(256),
+`type` varchar(256),
+`language` varchar(256),
+words varchar(256),
+onlineDate varchar(256),
+iMDBScore varchar(256),
+doubanScore varchar(256),
+fileType varchar(256),
+fileSize varchar(256),
+fileDimension varchar(256),
+fileTimeLength varchar(256),
+director varchar(256),
+actors varchar(256),
+description text,
+award varchar(256),
+ftpUrl varchar (256)
 );

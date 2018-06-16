@@ -33,9 +33,6 @@ public class UpgradeProcessor implements ApplicationListener<ContextRefreshedEve
     @Resource
     private UpgradeMapper upgradeMapper;
 
-    @Resource
-    private DataSource dataSource;
-
     private static Pattern upgradePattern = Pattern.compile("upgrade_[0-9]+\\.sql");
 
     private static final Log LOG = LogFactory.getLog(UpgradeProcessor.class);
@@ -97,43 +94,12 @@ public class UpgradeProcessor implements ApplicationListener<ContextRefreshedEve
     }
 
     private void executeUpgrade(String fileName,String sql,int version) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        PreparedStatement preparedStatement1 = null;
         try {
-            connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.execute();
-            preparedStatement1 = connection.prepareStatement("INSERT INTO t_upgrade(`source`,content,`version`)VALUES (?,?,?);");
-            preparedStatement1.setString(1,fileName);
-            preparedStatement1.setString(2,sql);
-            preparedStatement1.setInt(3,version);
-            preparedStatement1.execute();
+            upgradeMapper.executeSql(sql);
+            upgradeMapper.upgradeVersion(fileName,sql,version);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(preparedStatement != null){
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(preparedStatement1 != null){
-                try {
-                    preparedStatement1.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

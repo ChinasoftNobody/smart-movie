@@ -4,6 +4,19 @@
 <mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.MovieMapper">
     <!-- batch save movies -->
     <insert id="saveBatch" parameterType="com.chinasoft.lgh.movies.datacollector.model.Movie">
-        insert into
+        insert into t_movie (
+          id, name, translateName, age, region, `type`, `language`, words, onlineDate, iMDBScore,
+          doubanScore, fileType, fileSize, fileDimension, fileTimeLength, director, actors, description, award, ftpUrl
+        ) values
+        <foreach collection="movies" item="movie" separator=",">
+            (
+              uuid(),#{movie.name},#{movie.translateName},#{movie.age},#{movie.region},#{movie.type},#{movie.language},#{movie.words},#{movie.onlineDate},#{movie.iMDBScore},
+              #{movie.doubanScore},#{movie.fileType},#{movie.fileSize},#{movie.fileDimension},#{movie.fileTimeLength},#{movie.director},#{movie.actors},
+            #{movie.description},#{movie.award},#{movie.ftpUrl}
+            )
+        </foreach>
+
+
+
     </insert>
 </mapper>

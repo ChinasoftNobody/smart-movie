@@ -6,10 +6,12 @@ import com.chinasoft.lgh.movies.datacollector.collect.path.SubUrlMatcher;
 import com.chinasoft.lgh.movies.datacollector.common.CollectionException;
 import com.chinasoft.lgh.movies.datacollector.common.Response;
 import com.chinasoft.lgh.movies.datacollector.service.CollectorService;
+import com.chinasoft.lgh.movies.datacollector.service.MovieService;
 import com.chinasoft.lgh.movies.datacollector.util.DataCollectorUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,6 +24,10 @@ import java.util.regex.Pattern;
 public class CollectorServiceImpl implements CollectorService {
 
     private static final Pattern BASE_URL_PATTERN = Pattern.compile("(?<baseUrl> (http|https))");
+
+    @Resource
+    private MovieService movieService;
+
 
     @Override
     public Response<String> collect(String url) throws CollectionException{
@@ -36,25 +42,11 @@ public class CollectorServiceImpl implements CollectorService {
         });
         List<String> stringList = new ArrayList<>();
         stringList.add("body>div#header>div.contain>div.bd2>div.bd3>div.bd3r>div.co_area2>div.co_content8>ul>div>div#Zoom>span");
-        configure.setDeep(3);
+        configure.setDeep(1000);
         configure.setStandardFirst(true);
         configure.setCssQuery(stringList);
         configure.setBaseUrl("http://www.ygdy8.com");
-        DataCollectorUtil.collectDataFromUrl(url,configure,new HtmlAnalyzer());
+        DataCollectorUtil.collectDataFromUrl(url,configure,new HtmlAnalyzer(movieService));
         return new Response<>("success",true);
-    }
-
-    /**
-     * resolve baseUrl
-     * @param url url
-     * @return baseUrl
-     */
-    private String resolveBaseUrl(String url) throws CollectionException{
-        Matcher matcher = BASE_URL_PATTERN.matcher(url);
-        if(!matcher.matches()){
-            throw new CollectionException("invalid url :"+ url);
-        }
-        matcher.group("baseUrl");
-        return null;
     }
 }

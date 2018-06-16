@@ -1,0 +1,1 @@
+alter table t_movie modify actors text;

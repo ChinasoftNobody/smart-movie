@@ -1,5 +1,6 @@
 package com.chinasoft.lgh.movies.datacollector.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -21,4 +22,18 @@ public interface UpgradeMapper {
      * @return 返回最新版本
      */
     HashMap<String,Integer> getLatest();
+
+    /**
+     * execute sql
+     * @param sql sql
+     */
+    void executeSql(@Param("sql") String sql);
+
+    /**
+     * upgrade version
+     * @param fileName filename
+     * @param sql sql
+     * @param version version
+     */
+    void upgradeVersion(@Param("fileName") String fileName, @Param("sql") String sql, @Param("version") int version);
 }
