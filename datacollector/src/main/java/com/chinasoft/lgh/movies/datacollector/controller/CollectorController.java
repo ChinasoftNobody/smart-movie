@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -26,6 +28,10 @@ public class CollectorController {
     @ResponseBody
     public Response<String> url() throws CollectionException{
         String rootUrl = "http://www.ygdy8.com";
-        return collectorService.collect(rootUrl);
+        String url = "http://www.ygdy8.net";
+        List<String> urls = new ArrayList<>();
+        urls.add(url);
+        urls.add(rootUrl);
+        return collectorService.collect(urls);
     }
 }

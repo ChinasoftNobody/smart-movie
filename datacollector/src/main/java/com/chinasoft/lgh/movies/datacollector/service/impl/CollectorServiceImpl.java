@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -30,9 +29,9 @@ public class CollectorServiceImpl implements CollectorService {
 
 
     @Override
-    public Response<String> collect(String url) throws CollectionException{
-        if(StringUtils.isEmpty(url)){
-            throw new CollectionException("url is empty");
+    public Response<String> collect(List<String> urls) throws CollectionException{
+        if(StringUtils.isEmpty(urls)){
+            throw new CollectionException("urls is empty");
         }
         PathConfigure configure = new PathConfigure(new SubUrlMatcher() {
             @Override
@@ -46,7 +45,7 @@ public class CollectorServiceImpl implements CollectorService {
         configure.setStandardFirst(true);
         configure.setCssQuery(stringList);
         configure.setBaseUrl("http://www.ygdy8.com");
-        DataCollectorUtil.collectDataFromUrl(url,configure,new HtmlAnalyzer(movieService));
+        DataCollectorUtil.collectDataFromUrl(urls,configure,new HtmlAnalyzer(movieService));
         return new Response<>("success",true);
     }
 }

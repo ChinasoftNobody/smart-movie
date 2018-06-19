@@ -3,6 +3,8 @@ package com.chinasoft.lgh.movies.datacollector.service;
 import com.chinasoft.lgh.movies.datacollector.common.CollectionException;
 import com.chinasoft.lgh.movies.datacollector.common.Response;
 
+import java.util.List;
+
 /**
  * @author Administrator
  */
@@ -15,5 +17,5 @@ public interface CollectorService {
      * @return 结果
      * @throws  CollectionException exception
      */
-    Response<String> collect(String url) throws CollectionException;
+    Response<String> collect(List<String> url) throws CollectionException;
 }

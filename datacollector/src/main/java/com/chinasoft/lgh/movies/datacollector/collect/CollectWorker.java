@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,29 +25,31 @@ public class CollectWorker implements Runnable {
 
     private RestTemplate restTemplate;
     private PathConfigure pathConfigure;
-    private String rootUrl;
+    private List<String> rootUrls;
     private Analyzer analyzer;
 
-    public CollectWorker(RestTemplate restTemplate, PathConfigure pathConfigure, String rootUrl, Analyzer analyzer) {
+    public CollectWorker(RestTemplate restTemplate, PathConfigure pathConfigure, List<String> urls, Analyzer analyzer) {
         this.restTemplate = restTemplate;
         this.pathConfigure = pathConfigure;
-        this.rootUrl = rootUrl;
+        this.rootUrls = urls;
         this.analyzer = analyzer;
     }
 
-    public String getRootUrl() {
-        return rootUrl;
+    public List<String> getRootUrls() {
+        return rootUrls;
     }
 
     @Override
     public void run() {
         LOG.info("collection work start");
+        Set<String> urlList = new HashSet<>(rootUrls);
         try {
             if (!pathConfigure.isStandardFirst()) {
-                deepFirst(rootUrl);
+                for(String url : urlList){
+                    deepFirst(url);
+                }
             } else {
-                Set<String> urlList = new HashSet<>(1);
-                urlList.add(rootUrl);
+                urlList.addAll(rootUrls);
                 standardFirst(urlList);
             }
         } catch (Exception e) {

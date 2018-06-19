@@ -2,11 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.MovieMapper">
+    <sql id="t_movie_column">
+        id, name, translateName, age, region, `type`, `language`, words, onlineDate, iMDBScore,
+        doubanScore, fileType, fileSize, fileDimension, fileTimeLength, director, actors, description, award, ftpUrl
+    </sql>
+
     <!-- batch save movies -->
     <insert id="saveBatch" parameterType="com.chinasoft.lgh.movies.datacollector.model.Movie">
         insert into t_movie (
-          id, name, translateName, age, region, `type`, `language`, words, onlineDate, iMDBScore,
-          doubanScore, fileType, fileSize, fileDimension, fileTimeLength, director, actors, description, award, ftpUrl
+          <include refid="t_movie_column"/>
         ) values
         <foreach collection="movies" item="movie" separator=",">
             (
@@ -16,7 +20,20 @@
             )
         </foreach>
 
-
-
     </insert>
+
+    <!-- query by filter -->
+    <select id="queryByFilter" resultType="com.chinasoft.lgh.movies.datacollector.model.Movie"
+            parameterType="com.chinasoft.lgh.movies.datacollector.pojo.MovieFilter">
+        select <include refid="t_movie_column"/> from t_movie
+        <where>
+            1=1
+            <if test="name != null and name !='' ">
+                and name like concat('%/',#{name,jdbcType=VARCHAR},'%') escape '/'
+            </if>
+            <if test="translateName != null and translateName !='' ">
+                and translateName like concat('%/',#{name,jdbcType=VARCHAR},'%') escape '/'
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -21,7 +21,7 @@ public class CollectorThreadFactory implements ThreadFactory {
             ThreadGroup threadGroup = new ThreadGroup(THREAD_GROUP_NAME);
             LOG.info("create a new thread for runnable class : " + r.getClass().getName());
             CollectWorker collectWorker = (CollectWorker)r;
-            return new Thread(threadGroup,collectWorker,collectWorker.getRootUrl());
+            return new Thread(threadGroup,collectWorker,collectWorker.getRootUrls().get(0));
         }
         LOG.info("create a new thread for runnable class : " + r.getClass().getName());
         return new Thread(r);
