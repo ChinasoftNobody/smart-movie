@@ -50,4 +50,14 @@
           limit #{page.start},#{page.pageSize}
         </if>
     </select>
+
+    <!-- query types -->
+    <select id="queryTypes" resultType="java.lang.String">
+        select `type` from t_movie group by `type` order by `type` limit 0,5;
+    </select>
+
+    <!-- query region -->
+    <select id="queryRegions" resultType="java.lang.String">
+        select `region` from t_movie group by `region` order by `region` limit 0,5;
+    </select>
 </mapper>

@@ -32,4 +32,23 @@ public class MovieController {
         }
         return new Response<>(movies);
     }
+
+    @PostMapping(value = "/types",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Response<List<String>> types(){
+        List<String> types = movieService.queryTypes();
+        if (types == null) {
+            return new Response<>(new ArrayList<>());
+        }
+        return new Response<>(types);
+    }
+
+    @PostMapping(value = "/regions",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Response<List<String>> regions(){
+        List<String> types = movieService.queryRegions();
+        if (types == null) {
+            return new Response<>(new ArrayList<>());
+        }
+        return new Response<>(types);
+    }
+
 }

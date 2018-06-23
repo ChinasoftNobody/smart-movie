@@ -19,4 +19,16 @@ public interface MovieService {
      * @return movies
      */
     List<Movie> queryByFilter(MovieFilter movieFilter);
+
+    /**
+     * query types
+     * @return type list
+     */
+    List<String> queryTypes();
+
+    /**
+     * query regions
+     * @return regions
+     */
+    List<String> queryRegions();
 }

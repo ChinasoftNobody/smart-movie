@@ -38,4 +38,14 @@ public class MovieServiceImpl implements MovieService {
         }
         return movieMapper.queryByFilter(movieFilter);
     }
+
+    @Override
+    public List<String> queryTypes() {
+        return movieMapper.queryTypes();
+    }
+
+    @Override
+    public List<String> queryRegions() {
+        return movieMapper.queryRegions();
+    }
 }

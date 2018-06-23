@@ -26,4 +26,16 @@ public interface MovieMapper {
      * @return movies
      */
     List<Movie> queryByFilter(MovieFilter movieFilter);
+
+    /**
+     * query types
+     * @return types
+     */
+    List<String> queryTypes();
+
+    /**
+     * query regions
+     * @return regions
+     */
+    List<String> queryRegions();
 }
