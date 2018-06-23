@@ -114,6 +114,10 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
         <!-- HTML parser-->
         <dependency>
             <!-- jsoup HTML parser library @ https://jsoup.org/ -->
