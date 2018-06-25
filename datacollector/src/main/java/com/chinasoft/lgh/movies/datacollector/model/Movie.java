@@ -42,6 +42,8 @@ public class Movie {
 
     private String ftpUrl;
 
+    private String mainImage;
+
     public String getId() {
         return id;
     }
@@ -200,5 +202,13 @@ public class Movie {
 
     public void setFtpUrl(String ftpUrl) {
         this.ftpUrl = ftpUrl;
+    }
+
+    public String getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
     }
 }

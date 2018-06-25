@@ -38,4 +38,11 @@ public interface MovieMapper {
      * @return regions
      */
     List<String> queryRegions();
+
+    /**
+     * query count by filter
+     * @param movieFilter filter
+     * @return count
+     */
+    int queryCountByFilter(MovieFilter movieFilter);
 }

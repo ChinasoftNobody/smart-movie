@@ -2,6 +2,8 @@ package com.chinasoft.lgh.movies.datacollector.collect.analyze;
 
 import com.chinasoft.lgh.movies.datacollector.collect.path.PathConfigure;
 import com.chinasoft.lgh.movies.datacollector.model.Movie;
+import com.chinasoft.lgh.movies.datacollector.model.MovieImage;
+import com.chinasoft.lgh.movies.datacollector.service.MovieImageService;
 import com.chinasoft.lgh.movies.datacollector.service.MovieService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +18,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Administrator
@@ -25,6 +28,8 @@ public class HtmlAnalyzer implements Analyzer {
     private static final Log LOG = LogFactory.getLog(HtmlAnalyzer.class);
 
     private MovieService movieService;
+
+    private MovieImageService movieImageService;
 
     private List<Movie> movies = new ArrayList<>(1000);
 
@@ -73,8 +78,10 @@ public class HtmlAnalyzer implements Analyzer {
         }
     }
 
-    public HtmlAnalyzer(MovieService movieService) {
+    public HtmlAnalyzer(MovieService movieService,
+                        MovieImageService movieImageService) {
         this.movieService = movieService;
+        this.movieImageService = movieImageService;
     }
 
     @Override
@@ -127,6 +134,10 @@ public class HtmlAnalyzer implements Analyzer {
         if(basicElement == null){
             return;
         }
+        Elements elements = basicElement.select("img");
+        if(basicElement == null){
+            return;
+        }
         String basicInfo = basicElement.toString().replace("<br>","\n");
         Element urlE = element.selectFirst("table>tbody>tr>td>a");
         int i = 0;
@@ -145,7 +156,9 @@ public class HtmlAnalyzer implements Analyzer {
             for(String property : properties){
                 property = property.trim();
                 if(!StringUtils.isEmpty(property)){
+                    movie.setId(UUID.randomUUID().toString());
                     resolveBasicProperty(movie,property);
+                    resolveImageSrc(movie,elements);
                 }
             }
             if(urlE != null){
@@ -154,6 +167,32 @@ public class HtmlAnalyzer implements Analyzer {
             movies.add(movie);
         }
 
+
+    }
+
+    private void resolveImageSrc(Movie movie, Elements elements) {
+        if(elements == null){
+            return;
+        }
+        Iterator<Element> elementIterator = elements.iterator();
+        List<MovieImage> movieImages = new ArrayList<>();
+        int i = 0;
+        while (elementIterator.hasNext()){
+            Element element = elementIterator.next();
+            String src = element.attr("src").trim();
+            if(StringUtils.isEmpty(src)){
+                continue;
+            }
+            if(i == 0){
+                movie.setMainImage(src);
+            }else {
+                movieImages.add(new MovieImage(movie.getId(),src,i));
+            }
+            i++;
+        }
+        if(!movieImages.isEmpty()){
+            movieImageService.batchSave(movieImages);
+        }
 
     }
 
@@ -167,6 +206,7 @@ public class HtmlAnalyzer implements Analyzer {
             if(property.startsWith(basicInfoEnum.value)){
                 property = property.substring(basicInfoEnum.value.length());
                 property = property.trim();
+                property = property.replaceAll("&nbsp;","");
                 if(property.length()> 1000){
                     continue;
                 }

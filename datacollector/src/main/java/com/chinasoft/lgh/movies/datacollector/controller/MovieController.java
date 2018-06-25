@@ -3,6 +3,7 @@ package com.chinasoft.lgh.movies.datacollector.controller;
 import com.chinasoft.lgh.movies.datacollector.common.Response;
 import com.chinasoft.lgh.movies.datacollector.model.Movie;
 import com.chinasoft.lgh.movies.datacollector.pojo.MovieFilter;
+import com.chinasoft.lgh.movies.datacollector.pojo.Pages;
 import com.chinasoft.lgh.movies.datacollector.service.MovieService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +26,10 @@ public class MovieController {
     private MovieService movieService;
 
     @PostMapping(value = "/query",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Response<List<Movie>> queryMovies(@RequestBody MovieFilter movieFilter){
-        List<Movie> movies = movieService.queryByFilter(movieFilter);
-        if(null == movies || movies.isEmpty()){
-            return new Response<>(new ArrayList<>());
+    public Response<Pages<Movie>> queryMovies(@RequestBody MovieFilter movieFilter){
+        Pages<Movie> movies = movieService.queryByFilter(movieFilter);
+        if(null == movies){
+            return new Response<>(new Pages<>());
         }
         return new Response<>(movies);
     }

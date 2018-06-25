@@ -4,7 +4,7 @@
 <mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.MovieMapper">
     <sql id="t_movie_column">
         id, name, translateName, age, region, `type`, `language`, words, onlineDate, iMDBScore,
-        doubanScore, fileType, fileSize, fileDimension, fileTimeLength, director, actors, description, award, ftpUrl
+        doubanScore, fileType, fileSize, fileDimension, fileTimeLength, director, actors, description, award, ftpUrl, mainImage
     </sql>
 
     <!-- batch save movies -->
@@ -14,9 +14,9 @@
         ) values
         <foreach collection="movies" item="movie" separator=",">
             (
-            uuid(),#{movie.name},#{movie.translateName},#{movie.age},#{movie.region},#{movie.type},#{movie.language},#{movie.words},#{movie.onlineDate},#{movie.iMDBScore},
+            #{movie.id},#{movie.name},#{movie.translateName},#{movie.age},#{movie.region},#{movie.type},#{movie.language},#{movie.words},#{movie.onlineDate},#{movie.iMDBScore},
             #{movie.doubanScore},#{movie.fileType},#{movie.fileSize},#{movie.fileDimension},#{movie.fileTimeLength},#{movie.director},#{movie.actors},
-            #{movie.description},#{movie.award},#{movie.ftpUrl}
+            #{movie.description},#{movie.award},#{movie.ftpUrl},#{movie.mainImage}
             )
         </foreach>
 
@@ -46,9 +46,36 @@
                 </foreach>
             </if>
         </where>
+        order by name,translateName
         <if test="page.start>=0 and page.pageSize>0">
           limit #{page.start},#{page.pageSize}
         </if>
+    </select>
+
+    <!-- query count by filter -->
+    <select id="queryCountByFilter" parameterType="com.chinasoft.lgh.movies.datacollector.pojo.MovieFilter"
+    resultType="java.lang.Integer">
+        select
+        count(1) as total
+        from t_movie
+        <where>
+            1=1
+            <if test="keyword != null and keyword !='' ">
+                and name like concat('%/',#{keyword,jdbcType=VARCHAR},'%') escape '/'
+            </if>
+            <if test="type != null and type.size>0">
+                and
+                <foreach collection="type" item="t" separator="or">
+                    type like concat('%/',#{t},'%') escape '/'
+                </foreach>
+            </if>
+            <if test="region != null and region.size>0">
+                and
+                <foreach collection="region" separator="or" item="r">
+                    region like concat('%/',#{r},'%') escape '/'
+                </foreach>
+            </if>
+        </where>
     </select>
 
     <!-- query types -->

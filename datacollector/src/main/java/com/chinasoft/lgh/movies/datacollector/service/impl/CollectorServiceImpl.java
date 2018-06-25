@@ -6,6 +6,7 @@ import com.chinasoft.lgh.movies.datacollector.collect.path.SubUrlMatcher;
 import com.chinasoft.lgh.movies.datacollector.common.CollectionException;
 import com.chinasoft.lgh.movies.datacollector.common.Response;
 import com.chinasoft.lgh.movies.datacollector.service.CollectorService;
+import com.chinasoft.lgh.movies.datacollector.service.MovieImageService;
 import com.chinasoft.lgh.movies.datacollector.service.MovieService;
 import com.chinasoft.lgh.movies.datacollector.util.DataCollectorUtil;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,13 @@ public class CollectorServiceImpl implements CollectorService {
     @Resource
     private MovieService movieService;
 
+    @Resource
+    private MovieImageService movieImageService;
+
 
     @Override
-    public Response<String> collect(List<String> urls) throws CollectionException{
-        if(StringUtils.isEmpty(urls)){
+    public Response<String> collect(List<String> urls) throws CollectionException {
+        if (StringUtils.isEmpty(urls)) {
             throw new CollectionException("urls is empty");
         }
         PathConfigure configure = new PathConfigure(new SubUrlMatcher() {
@@ -41,11 +45,11 @@ public class CollectorServiceImpl implements CollectorService {
         });
         List<String> stringList = new ArrayList<>();
         stringList.add("body>div#header>div.contain>div.bd2>div.bd3>div.bd3r>div.co_area2>div.co_content8>ul>div>div#Zoom>span");
-        configure.setDeep(1000);
+        configure.setDeep(100000);
         configure.setStandardFirst(true);
         configure.setCssQuery(stringList);
         configure.setBaseUrl("http://www.ygdy8.com");
-        DataCollectorUtil.collectDataFromUrl(urls,configure,new HtmlAnalyzer(movieService));
-        return new Response<>("success",true);
+        DataCollectorUtil.collectDataFromUrl(urls, configure, new HtmlAnalyzer(movieService, movieImageService));
+        return new Response<>("success", true);
     }
 }

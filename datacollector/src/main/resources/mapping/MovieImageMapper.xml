@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.MovieImageMapper">
+    <sql id="t_movie_image_column">
+        `id`, `movie_id`, `image`, `index`
+    </sql>
+
+    <!-- batch save movies -->
+    <insert id="batchSave" parameterType="com.chinasoft.lgh.movies.datacollector.model.MovieImage">
+        insert into t_movie_image (
+        <include refid="t_movie_image_column"/>
+        ) values
+        <foreach collection="images" item="image" separator=",">
+            (
+            #{image.id},#{image.movieId},#{image.image},#{image.index}
+            )
+        </foreach>
+
+    </insert>
+
+</mapper>
