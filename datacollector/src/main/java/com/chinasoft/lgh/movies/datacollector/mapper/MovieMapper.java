@@ -45,4 +45,11 @@ public interface MovieMapper {
      * @return count
      */
     int queryCountByFilter(MovieFilter movieFilter);
+
+    /**
+     * query by id
+     * @param id id
+     * @return movie info
+     */
+    Movie queryById(@Param("id") String id);
 }

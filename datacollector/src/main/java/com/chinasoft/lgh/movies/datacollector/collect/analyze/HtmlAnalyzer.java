@@ -207,6 +207,7 @@ public class HtmlAnalyzer implements Analyzer {
                 property = property.substring(basicInfoEnum.value.length());
                 property = property.trim();
                 property = property.replaceAll("&nbsp;","");
+                property = property.replaceAll("<.*>","");
                 if(property.length()> 1000){
                     continue;
                 }
@@ -269,7 +270,6 @@ public class HtmlAnalyzer implements Analyzer {
             }
         }
     }
-
     /**
      * resolve subUrls
      * @return subUrls

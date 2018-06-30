@@ -32,4 +32,11 @@ public interface MovieService {
      * @return regions
      */
     List<String> queryRegions();
+
+    /**
+     * query movie by ID
+     * @param id id
+     * @return movie info
+     */
+    Movie queryById(String id);
 }

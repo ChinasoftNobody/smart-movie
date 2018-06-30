@@ -16,7 +16,7 @@
             #{image.id},#{image.movieId},#{image.image},#{image.index}
             )
         </foreach>
-
+        on duplicate key update `image` = values(`image`);
     </insert>
 
 </mapper>

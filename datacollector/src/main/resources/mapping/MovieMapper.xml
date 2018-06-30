@@ -19,7 +19,7 @@
             #{movie.description},#{movie.award},#{movie.ftpUrl},#{movie.mainImage}
             )
         </foreach>
-
+        on duplicate key update `name` = values(`name`);
     </insert>
 
     <!-- query by filter -->
@@ -48,13 +48,13 @@
         </where>
         order by name,translateName
         <if test="page.start>=0 and page.pageSize>0">
-          limit #{page.start},#{page.pageSize}
+            limit #{page.start},#{page.pageSize}
         </if>
     </select>
 
     <!-- query count by filter -->
     <select id="queryCountByFilter" parameterType="com.chinasoft.lgh.movies.datacollector.pojo.MovieFilter"
-    resultType="java.lang.Integer">
+            resultType="java.lang.Integer">
         select
         count(1) as total
         from t_movie
@@ -86,5 +86,11 @@
     <!-- query region -->
     <select id="queryRegions" resultType="java.lang.String">
         select `region` from t_movie group by `region` order by `region` limit 0,5;
+    </select>
+
+    <!-- query by ID -->
+    <select id="queryById" resultType="com.chinasoft.lgh.movies.datacollector.model.Movie"
+            parameterType="java.lang.String">
+        select <include refid="t_movie_column"/> from t_movie where id = #{id};
     </select>
 </mapper>

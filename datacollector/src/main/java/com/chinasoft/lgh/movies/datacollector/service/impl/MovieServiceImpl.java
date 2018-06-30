@@ -56,4 +56,9 @@ public class MovieServiceImpl implements MovieService {
     public List<String> queryRegions() {
         return movieMapper.queryRegions();
     }
+
+    @Override
+    public Movie queryById(String id) {
+        return movieMapper.queryById(id);
+    }
 }

@@ -45,7 +45,7 @@ public class CollectorServiceImpl implements CollectorService {
         });
         List<String> stringList = new ArrayList<>();
         stringList.add("body>div#header>div.contain>div.bd2>div.bd3>div.bd3r>div.co_area2>div.co_content8>ul>div>div#Zoom>span");
-        configure.setDeep(100000);
+        configure.setDeep(1000000);
         configure.setStandardFirst(true);
         configure.setCssQuery(stringList);
         configure.setBaseUrl("http://www.ygdy8.com");
