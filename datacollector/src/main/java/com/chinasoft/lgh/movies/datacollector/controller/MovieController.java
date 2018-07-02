@@ -1,10 +1,13 @@
 package com.chinasoft.lgh.movies.datacollector.controller;
 
 import com.chinasoft.lgh.movies.datacollector.common.Response;
+import com.chinasoft.lgh.movies.datacollector.model.LocateImage;
 import com.chinasoft.lgh.movies.datacollector.model.Movie;
 import com.chinasoft.lgh.movies.datacollector.pojo.MovieFilter;
 import com.chinasoft.lgh.movies.datacollector.pojo.Pages;
+import com.chinasoft.lgh.movies.datacollector.service.LocateImageService;
 import com.chinasoft.lgh.movies.datacollector.service.MovieService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,9 @@ public class MovieController {
 
     @Resource
     private MovieService movieService;
+
+    @Resource
+    private LocateImageService locateImageService;
 
     @PostMapping(value = "/query", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Response<Pages<Movie>> queryMovies(@RequestBody MovieFilter movieFilter) {
@@ -63,6 +69,10 @@ public class MovieController {
         if (movie1 == null) {
             return new Response<>("movie not exist");
         }
+        LocateImage locateImage = locateImageService.queryById(movie.getId());
+        if (locateImage != null && locateImage.getImage() != null) {
+            movie1.setMainImage("http://localhost:8081/movie/movie/image/" + movie.getId());
+        }
         return new Response<>(movie1);
     }
 
@@ -71,7 +81,7 @@ public class MovieController {
         String path = "/home/lgh/code/platform/src/assets/video/test.mp4";
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             byte[] bytes = new byte[1024];
-            while (fileInputStream.read(bytes) > 0){
+            while (fileInputStream.read(bytes) > 0) {
                 response.getOutputStream().write(bytes);
                 response.getOutputStream().flush();
             }
@@ -82,5 +92,31 @@ public class MovieController {
         }
 
 
+    }
+
+
+    @PostMapping("/image/{id}/check")
+    @ApiOperation(value = "locate image check")
+    public Response<Boolean> checkLocateImage(@PathVariable(value = "id") String id) {
+        if (StringUtils.isEmpty(id)) {
+            return new Response<>(false);
+        }
+        LocateImage locateImage = locateImageService.queryById(id);
+        if (locateImage == null || locateImage.getImage() == null) {
+            return new Response<>(false);
+        }
+        return new Response<>(true);
+    }
+
+    @GetMapping("/image/{id}")
+    public void locateImage(@PathVariable(value = "id") String id, HttpServletResponse response) {
+        if (StringUtils.isEmpty(id)) {
+            return;
+        }
+        LocateImage locateImage = locateImageService.queryById(id);
+        if (locateImage == null || locateImage.getImage() == null) {
+            return;
+        }
+        locateImageService.writeImage(response,locateImage);
     }
 }

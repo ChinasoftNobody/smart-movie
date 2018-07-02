@@ -22,6 +22,12 @@ public interface MovieService {
     Pages<Movie> queryByFilter(MovieFilter movieFilter);
 
     /**
+     * query all movies
+     * @return movies
+     */
+    List<Movie> queryNotLocatedImages();
+
+    /**
      * query types
      * @return type list
      */

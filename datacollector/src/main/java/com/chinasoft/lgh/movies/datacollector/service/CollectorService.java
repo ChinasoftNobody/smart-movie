@@ -18,4 +18,9 @@ public interface CollectorService {
      * @throws  CollectionException exception
      */
     Response<String> collect(List<String> url) throws CollectionException;
+
+    /**
+     * locateImages
+     */
+    void locateImages();
 }

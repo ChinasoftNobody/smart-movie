@@ -1,0 +1,1 @@
+alter table t_locate_img modify column image longblob;

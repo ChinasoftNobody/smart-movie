@@ -48,6 +48,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<Movie> queryNotLocatedImages() {
+        return movieMapper.queryNotLocatedImages();
+    }
+
+    @Override
     public List<String> queryTypes() {
         return movieMapper.queryTypes();
     }

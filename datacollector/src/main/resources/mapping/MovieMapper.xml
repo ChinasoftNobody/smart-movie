@@ -7,6 +7,33 @@
         doubanScore, fileType, fileSize, fileDimension, fileTimeLength, director, actors, description, award, ftpUrl, mainImage
     </sql>
 
+    <sql id="t_movie_column_alias">
+        t.id, t.name, t.translateName, t.age, t.region, t.`type`, t.`language`, t.words, t.onlineDate, t.iMDBScore,
+        t.doubanScore, t.fileType, t.fileSize, t.fileDimension, t.fileTimeLength, t.director, t.actors,
+        t.description, t.award, t.ftpUrl, t.mainImage
+    </sql>
+
+    <sql id="filterContent">
+        <where>
+            `name` is not null and `name` != ''
+            <if test="keyword != null and keyword !='' ">
+                and name like concat('%/',#{keyword,jdbcType=VARCHAR},'%') escape '/'
+            </if>
+            <if test="type != null and type.size>0">
+                and
+                <foreach collection="type" item="t" separator="or">
+                    type like concat('%/',#{t},'%') escape '/'
+                </foreach>
+            </if>
+            <if test="region != null and region.size>0">
+                and
+                <foreach collection="region" separator="or" item="r">
+                    region like concat('%/',#{r},'%') escape '/'
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
     <!-- batch save movies -->
     <insert id="saveBatch" parameterType="com.chinasoft.lgh.movies.datacollector.model.Movie">
         insert into t_movie (
@@ -26,27 +53,10 @@
     <select id="queryByFilter" resultType="com.chinasoft.lgh.movies.datacollector.model.Movie"
             parameterType="com.chinasoft.lgh.movies.datacollector.pojo.MovieFilter">
         select
-        <include refid="t_movie_column"/>
-        from t_movie
-        <where>
-            1=1
-            <if test="keyword != null and keyword !='' ">
-                and name like concat('%/',#{keyword,jdbcType=VARCHAR},'%') escape '/'
-            </if>
-            <if test="type != null and type.size>0">
-                and
-                <foreach collection="type" item="t" separator="or">
-                    type like concat('%/',#{t},'%') escape '/'
-                </foreach>
-            </if>
-            <if test="region != null and region.size>0">
-                and
-                <foreach collection="region" separator="or" item="r">
-                    region like concat('%/',#{r},'%') escape '/'
-                </foreach>
-            </if>
-        </where>
-        order by name,translateName
+          <include refid="t_movie_column_alias"/>
+        from t_movie t left join t_locate_img t1 on t.id = t1.id
+        <include refid="filterContent"/>
+        order by t1.image desc,t.name,t.translateName
         <if test="page.start>=0 and page.pageSize>0">
             limit #{page.start},#{page.pageSize}
         </if>
@@ -92,5 +102,13 @@
     <select id="queryById" resultType="com.chinasoft.lgh.movies.datacollector.model.Movie"
             parameterType="java.lang.String">
         select <include refid="t_movie_column"/> from t_movie where id = #{id};
+    </select>
+
+    <!-- queryNotLocatedImages -->
+    <select id="queryNotLocatedImages" resultType="com.chinasoft.lgh.movies.datacollector.model.Movie">
+        select <include refid="t_movie_column_alias"/> from t_movie t
+        left join t_locate_img t1 on t1.id = t.id
+        where t.`name` is not null and t.`name` != ''
+        and t1.image is null;
     </select>
 </mapper>

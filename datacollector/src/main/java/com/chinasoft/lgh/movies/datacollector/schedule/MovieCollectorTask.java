@@ -35,6 +35,16 @@ public class MovieCollectorTask {
             e.printStackTrace();
             LOG.error("movie collector task occur a exception", e);
         }
-        LOG.info("movie collector task end...");
+        LOG.info("movie collector task end");
+    }
+
+    /**
+     * save images to local database
+     */
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void locateImages(){
+        LOG.info("locate images task start...");
+        collectorService.locateImages();
+        LOG.info("locate images task end");
     }
 }

@@ -52,4 +52,10 @@ public interface MovieMapper {
      * @return movie info
      */
     Movie queryById(@Param("id") String id);
+
+    /**
+     * query all movies
+     * @return movies
+     */
+    List<Movie> queryNotLocatedImages();
 }
