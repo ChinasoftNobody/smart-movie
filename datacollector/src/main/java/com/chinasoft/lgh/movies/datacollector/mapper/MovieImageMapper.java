@@ -14,4 +14,17 @@ public interface MovieImageMapper {
      * @param images MovieImages
      */
     void batchSave(@Param("images") List<MovieImage> images);
+
+    /**
+     * get sub images by id
+     * @param id id
+     * @return sub images
+     */
+    List<String> getById(@Param("id") String id);
+
+    /**
+     * query not located
+     * @return urls
+     */
+    List<MovieImage> queryNotLocated();
 }

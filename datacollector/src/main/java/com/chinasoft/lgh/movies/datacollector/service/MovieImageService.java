@@ -10,4 +10,17 @@ public interface MovieImageService {
      * @param subImage images
      */
     void batchSave(List<MovieImage> subImage);
+
+    /**
+     * get sub images by id
+     * @param id id
+     * @return sub images
+     */
+    List<String> getById(String id);
+
+    /**
+     * query not located
+     * @return movieList
+     */
+    List<MovieImage> queryNotLocated();
 }

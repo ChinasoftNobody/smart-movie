@@ -19,4 +19,14 @@ public class MovieImageServiceImpl implements MovieImageService {
     public void batchSave(List<MovieImage> subImage) {
         movieImageMapper.batchSave(subImage);
     }
+
+    @Override
+    public List<String> getById(String id) {
+        return movieImageMapper.getById(id);
+    }
+
+    @Override
+    public List<MovieImage> queryNotLocated() {
+        return movieImageMapper.queryNotLocated();
+    }
 }

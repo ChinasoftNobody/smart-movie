@@ -9,6 +9,9 @@ public class MovieImage {
     private String image;
     private int index;
 
+    public MovieImage() {
+    }
+
     public MovieImage(String id, String src, int index) {
         this.id = UUID.randomUUID().toString();
         this.movieId = id;

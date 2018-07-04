@@ -1,32 +1,19 @@
 package com.chinasoft.lgh.movies.datacollector.service.impl;
 
+import com.chinasoft.lgh.movies.datacollector.collect.LocateSubWorker;
 import com.chinasoft.lgh.movies.datacollector.collect.LocateWorker;
 import com.chinasoft.lgh.movies.datacollector.collect.analyze.HtmlAnalyzer;
-import com.chinasoft.lgh.movies.datacollector.collect.client.RestTemplateFactory;
 import com.chinasoft.lgh.movies.datacollector.collect.path.PathConfigure;
 import com.chinasoft.lgh.movies.datacollector.collect.path.SubUrlMatcher;
 import com.chinasoft.lgh.movies.datacollector.common.CollectionException;
 import com.chinasoft.lgh.movies.datacollector.common.Response;
-import com.chinasoft.lgh.movies.datacollector.model.LocateImage;
-import com.chinasoft.lgh.movies.datacollector.model.Movie;
-import com.chinasoft.lgh.movies.datacollector.service.CollectorService;
-import com.chinasoft.lgh.movies.datacollector.service.LocateImageService;
-import com.chinasoft.lgh.movies.datacollector.service.MovieImageService;
-import com.chinasoft.lgh.movies.datacollector.service.MovieService;
+import com.chinasoft.lgh.movies.datacollector.service.*;
 import com.chinasoft.lgh.movies.datacollector.util.DataCollectorUtil;
 import com.chinasoft.lgh.movies.datacollector.util.ThreadUtil;
-import javassist.bytecode.ByteArray;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +32,12 @@ public class CollectorServiceImpl implements CollectorService {
     @Resource
     private LocateImageService locateImageService;
 
+    @Resource
+    private LocateSubImageServiceImpl locateSubImageService;
+
+    @Resource
+    private UrlHistoryService urlHistoryService;
+
 
     @Override
     public Response<String> collect(List<String> urls) throws CollectionException {
@@ -62,15 +55,22 @@ public class CollectorServiceImpl implements CollectorService {
         configure.setDeep(1000000);
         configure.setStandardFirst(true);
         configure.setCssQuery(stringList);
-        configure.setBaseUrl("http://www.ygdy8.com");
-        DataCollectorUtil.collectDataFromUrl(urls, configure, new HtmlAnalyzer(movieService, movieImageService));
+        configure.setBaseUrl("http://www.ygdy8.net");
+        DataCollectorUtil.collectDataFromUrl(urls, configure,
+                new HtmlAnalyzer(movieService, movieImageService,urlHistoryService));
         return new Response<>("success", true);
     }
 
     @Override
     public void locateImages() {
-        LocateWorker locateWorker = new LocateWorker(movieService,locateImageService);
+        LocateWorker locateWorker = new LocateWorker(movieService, locateImageService);
         ThreadUtil.executorService.submit(locateWorker);
+    }
+
+    @Override
+    public void locateSubImages() {
+        LocateSubWorker locateSubWorker = new LocateSubWorker(movieImageService, locateSubImageService);
+        ThreadUtil.executorService.submit(locateSubWorker);
     }
 
 }

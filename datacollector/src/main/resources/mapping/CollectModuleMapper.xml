@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.CollectModuleMapper">
+
+    <sql id="t_collect_module_column">
+        `id`,`name`,`description`,`creator`
+    </sql>
+    <!-- save -->
+    <insert id="save" parameterType="com.chinasoft.lgh.movies.datacollector.model.collect.Module">
+        insert into t_collect_module(<include refid="t_collect_module_column"/> )
+        values (#{module.id},#{module.name},#{module.description},#{module.creator});
+    </insert>
+
+    <!-- queryByName -->
+    <select id="queryByName" resultType="com.chinasoft.lgh.movies.datacollector.model.collect.Module"
+    parameterType="java.lang.String">
+        select <include refid="t_collect_module_column"/>,`createTime` from t_collect_module
+        where name = #{name} limit 1;
+    </select>
+</mapper>

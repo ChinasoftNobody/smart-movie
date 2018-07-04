@@ -1,10 +1,13 @@
 package com.chinasoft.lgh.movies.datacollector.collect.analyze;
 
 import com.chinasoft.lgh.movies.datacollector.collect.path.PathConfigure;
+import com.chinasoft.lgh.movies.datacollector.mapper.UrlHistoryMapper;
 import com.chinasoft.lgh.movies.datacollector.model.Movie;
 import com.chinasoft.lgh.movies.datacollector.model.MovieImage;
+import com.chinasoft.lgh.movies.datacollector.model.UrlHistory;
 import com.chinasoft.lgh.movies.datacollector.service.MovieImageService;
 import com.chinasoft.lgh.movies.datacollector.service.MovieService;
+import com.chinasoft.lgh.movies.datacollector.service.UrlHistoryService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -30,6 +33,8 @@ public class HtmlAnalyzer implements Analyzer {
     private MovieService movieService;
 
     private MovieImageService movieImageService;
+
+    private UrlHistoryService urlHistoryService;
 
     private List<Movie> movies = new ArrayList<>(1000);
 
@@ -79,9 +84,11 @@ public class HtmlAnalyzer implements Analyzer {
     }
 
     public HtmlAnalyzer(MovieService movieService,
-                        MovieImageService movieImageService) {
+                        MovieImageService movieImageService,
+                        UrlHistoryService urlHistoryService) {
         this.movieService = movieService;
         this.movieImageService = movieImageService;
+        this.urlHistoryService = urlHistoryService;
     }
 
     @Override
@@ -296,6 +303,21 @@ public class HtmlAnalyzer implements Analyzer {
             }
         }
         pathConfigure.addDeep();
+        if(!urls.isEmpty()){
+            urlHistoryService.batchSave(handleUrlHistories(urls));
+        }
         return urls;
+    }
+
+    private List<UrlHistory> handleUrlHistories(List<String> urls) {
+        List<UrlHistory> urlHistories = new ArrayList<>(urls.size());
+        for(String url: urls){
+            UrlHistory urlHistory = new UrlHistory();
+            urlHistory.setId(UUID.randomUUID().toString());
+            urlHistory.setThreadId(Thread.currentThread().getName());
+            urlHistory.setUrl(url);
+            urlHistories.add(urlHistory);
+        }
+        return urlHistories;
     }
 }

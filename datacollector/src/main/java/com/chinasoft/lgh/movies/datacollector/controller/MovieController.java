@@ -6,6 +6,7 @@ import com.chinasoft.lgh.movies.datacollector.model.Movie;
 import com.chinasoft.lgh.movies.datacollector.pojo.MovieFilter;
 import com.chinasoft.lgh.movies.datacollector.pojo.Pages;
 import com.chinasoft.lgh.movies.datacollector.service.LocateImageService;
+import com.chinasoft.lgh.movies.datacollector.service.MovieImageService;
 import com.chinasoft.lgh.movies.datacollector.service.MovieService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -32,6 +33,9 @@ public class MovieController {
 
     @Resource
     private LocateImageService locateImageService;
+
+    @Resource
+    private MovieImageService movieImageService;
 
     @PostMapping(value = "/query", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Response<Pages<Movie>> queryMovies(@RequestBody MovieFilter movieFilter) {
@@ -118,5 +122,18 @@ public class MovieController {
             return;
         }
         locateImageService.writeImage(response,locateImage);
+    }
+
+    @PostMapping(value = "/subImages",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation("sub images")
+    public Response<List<String>> subImages(@RequestBody Movie movie){
+        if(movie == null || StringUtils.isEmpty(movie.getId())){
+            return new Response<>(new ArrayList<>());
+        }
+        List<String> subImages = movieImageService.getById(movie.getId());
+        if(subImages == null || subImages.isEmpty()){
+            return new Response<>(new ArrayList<>());
+        }
+        return new Response<>(subImages);
     }
 }

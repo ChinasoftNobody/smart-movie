@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.LocateSubImageMapper">
+    <sql id="t_locate_sub_img_column">
+        `id`,`movieId`,`image`
+    </sql>
+
+    <sql id="t_locate_sub_img_column_alias">
+        t.`id`,t.`movieId`,t.`image`
+    </sql>
+
+    <insert id="save" parameterType="com.chinasoft.lgh.movies.datacollector.model.LocateSubImage">
+        insert into t_locate_sub_img(<include refid="t_locate_sub_img_column"/>)
+        values (#{locateSubImage.id},#{locateSubImage.movieId},#{locateSubImage.image})
+    </insert>
+</mapper>

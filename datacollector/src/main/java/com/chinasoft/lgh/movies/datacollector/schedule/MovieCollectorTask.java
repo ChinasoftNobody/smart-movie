@@ -47,4 +47,8 @@ public class MovieCollectorTask {
         collectorService.locateImages();
         LOG.info("locate images task end");
     }
+    @Scheduled(cron = "0 0 10 * * ?")
+    public void locateSubImages(){
+        collectorService.locateSubImages();
+    }
 }

@@ -31,8 +31,8 @@ public class MyBatisConfig {
      *
      * @return
      */
-    @Bean(name = "sessionFactory")
-    public SqlSessionFactoryBean createSqlSessionFactoryBean() throws IOException {
+    @Bean(name = "sqlSessionFactory")
+    public SqlSessionFactoryBean sqlSessionFactory() throws IOException {
 
         PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();

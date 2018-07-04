@@ -83,7 +83,7 @@ public class CollectWorker implements Runnable {
                 subUrlList.addAll(subUrls);
             }
         }
-        if(pathConfigure.getCurrentDeep() <= pathConfigure.getDeep()){
+        if(pathConfigure.getCurrentDeep() <= pathConfigure.getDeep() && !subUrlList.isEmpty()){
             standardFirst(subUrlList);
         }
 

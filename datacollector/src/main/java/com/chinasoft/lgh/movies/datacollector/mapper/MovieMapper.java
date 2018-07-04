@@ -11,7 +11,7 @@ import java.util.List;
  * @author Administrator
  */
 @Repository
-public interface MovieMapper {
+public interface MovieMapper{
 
     /**
      * batch save

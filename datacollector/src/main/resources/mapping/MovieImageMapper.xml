@@ -6,6 +6,10 @@
         `id`, `movie_id`, `image`, `index`
     </sql>
 
+    <sql id="t_movie_image_column_alias">
+        t.`id`, t.`movie_id` as movieId, t.`image`, t.`index`
+    </sql>
+
     <!-- batch save movies -->
     <insert id="batchSave" parameterType="com.chinasoft.lgh.movies.datacollector.model.MovieImage">
         insert into t_movie_image (
@@ -19,4 +23,18 @@
         on duplicate key update `image` = values(`image`);
     </insert>
 
+    <!-- getById -->
+    <select id="getById" parameterType="java.lang.String" resultType="java.lang.String">
+        select case t1.`image` when null then t.`image` else t1.`image` end as image
+        from t_movie_image t left join t_locate_sub_img t1 on t.id = t1.id
+        where t.`movie_id` = #{id} order by t.`index` asc;
+    </select>
+
+    <!-- queryNotLocated -->
+    <select id="queryNotLocated"
+            resultType="com.chinasoft.lgh.movies.datacollector.model.MovieImage">
+        select <include refid="t_movie_image_column_alias"/>
+        from t_movie_image t left join t_locate_sub_img t1 on t.id = t1.id
+        where t1.`image` is null and t1.id is null limit 0,5000;
+    </select>
 </mapper>

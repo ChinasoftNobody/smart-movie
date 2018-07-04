@@ -5,6 +5,7 @@ import com.chinasoft.lgh.movies.datacollector.model.LocateImage;
 import com.chinasoft.lgh.movies.datacollector.model.Movie;
 import com.chinasoft.lgh.movies.datacollector.service.LocateImageService;
 import com.chinasoft.lgh.movies.datacollector.service.MovieService;
+import com.chinasoft.lgh.movies.datacollector.util.ImageLocateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpMethod;
@@ -49,22 +50,14 @@ public class LocateWorker implements Runnable {
      * @param movie movie
      */
     private void locateImage(Movie movie) {
-        RestTemplate restTemplate = RestTemplateFactory.buildDefault();
-        try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(movie.getMainImage(), HttpMethod.GET, null, byte[].class, "");
-            if (response.getStatusCode().equals(HttpStatus.OK)) {
-                byte[] bytes = response.getBody();
-                LocateImage locateImage = new LocateImage();
-                locateImage.setId(movie.getId());
-                locateImage.setImage(bytes);
-                if(!locateImageService.saveLocateImage(locateImage)){
-                    LOG.error("save locate image error");
-                }
-            }else {
-                LOG.error("locate image error: " + response.getStatusCode());
+        byte[] bytes = ImageLocateUtil.getImageFromUrl(movie.getMainImage());
+        if(bytes != null){
+            LocateImage locateImage = new LocateImage();
+            locateImage.setId(movie.getId());
+            locateImage.setImage(bytes);
+            if(!locateImageService.saveLocateImage(locateImage)){
+                LOG.error("save locate image error");
             }
-        } catch (Exception e) {
-            LOG.error("locate image error: ", e);
         }
     }
 }

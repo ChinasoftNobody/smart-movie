@@ -23,4 +23,9 @@ public interface CollectorService {
      * locateImages
      */
     void locateImages();
+
+    /**
+     * locate sub images
+     */
+    void locateSubImages();
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.UrlHistoryMapper">
+    <sql id="t_collect_url_history_column">
+        `id`,`threadId`,`url`
+    </sql>
+
+    <sql id="filter">
+        <where>
+            <if test="filter != null and filter.threadId != null and filter.threadId != ''">
+                `threadId` = #{filter.threadId}
+            </if>
+        </where>
+    </sql>
+
+    <insert id="batchSave" parameterType="com.chinasoft.lgh.movies.datacollector.model.UrlHistory">
+        insert into t_collect_url_history(<include refid="t_collect_url_history_column"/>)
+        values
+          <foreach collection="urlHistories" item="url" separator=",">
+              (#{url.id},#{url.threadId},#{url.url})
+          </foreach>
+        ;
+    </insert>
+
+    <!-- countByFilter -->
+    <select id="countByFilter" parameterType="com.chinasoft.lgh.movies.datacollector.pojo.UrlHistoryFilter"
+     resultType="java.lang.Integer">
+        select count(1) from t_collect_url_history
+        <include refid="filter"/>
+    </select>
+
+    <!-- queryByFilter -->
+    <select id="queryByFilter" parameterType="com.chinasoft.lgh.movies.datacollector.pojo.UrlHistoryFilter"
+            resultType="com.chinasoft.lgh.movies.datacollector.model.UrlHistory">
+        select <include refid="t_collect_url_history_column"/> from t_collect_url_history
+        <include refid="filter"/>
+        limit #{filter.start},#{filter.pageSize}
+    </select>
+
+    <!-- queryThreads -->
+    <select id="queryThreads" resultType="java.lang.String">
+        select threadId from t_collect_url_history group by threadId order by threadId asc;
+    </select>
+</mapper>
