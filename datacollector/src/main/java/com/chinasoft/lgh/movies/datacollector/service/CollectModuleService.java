@@ -3,6 +3,8 @@ package com.chinasoft.lgh.movies.datacollector.service;
 import com.chinasoft.lgh.movies.datacollector.common.ModuleException;
 import com.chinasoft.lgh.movies.datacollector.model.collect.Module;
 
+import java.util.List;
+
 public interface CollectModuleService {
 
     /**
@@ -11,4 +13,17 @@ public interface CollectModuleService {
      * @return result
      */
     boolean create(Module module)throws ModuleException;
+
+    /**
+     * query all modules
+     * @return modules
+     */
+    List<Module> queryAll();
+
+    /**
+     * delete module
+     * @param module module
+     * @return flag
+     */
+    Boolean delete(Module module);
 }

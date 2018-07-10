@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasoft.lgh.movies.datacollector.mapper.PlanMapper">
+
+    <sql id="t_collect_plan_column">
+        `id`, `moduleId`,`name`,`description`,`cron`
+    </sql>
+
+    <!-- queryByModuleId -->
+    <select id="queryByModuleId" parameterType="java.lang.String"
+    resultType="com.chinasoft.lgh.movies.datacollector.model.collect.Plan">
+        select <include refid="t_collect_plan_column"/> from t_collect_plan
+        where `moduleId` = #{moduleId};
+    </select>
+</mapper>

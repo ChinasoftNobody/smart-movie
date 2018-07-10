@@ -18,4 +18,14 @@
         select <include refid="t_collect_module_column"/>,`createTime` from t_collect_module
         where name = #{name} limit 1;
     </select>
+
+    <!-- queryAll -->
+    <select id="queryAll" resultType="com.chinasoft.lgh.movies.datacollector.model.collect.Module">
+        select <include refid="t_collect_module_column"/> from t_collect_module;
+    </select>
+
+    <!-- deleteById -->
+    <delete id="deleteById" parameterType="java.lang.String">
+        delete from t_collect_module where id = #{id};
+    </delete>
 </mapper>

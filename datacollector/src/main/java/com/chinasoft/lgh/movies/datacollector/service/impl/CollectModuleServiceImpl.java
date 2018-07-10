@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,5 +28,18 @@ public class CollectModuleServiceImpl implements CollectModuleService {
         }
         module.setId(UUID.randomUUID().toString());
         return collectModuleMapper.save(module);
+    }
+
+    @Override
+    public List<Module> queryAll() {
+        return collectModuleMapper.queryAll();
+    }
+
+    @Override
+    public Boolean delete(Module module) {
+        if(module == null || StringUtils.isEmpty(module.getId())){
+            return false;
+        }
+        return collectModuleMapper.deleteById(module.getId());
     }
 }
