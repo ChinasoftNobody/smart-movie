@@ -13,4 +13,10 @@
         select <include refid="t_collect_plan_column"/> from t_collect_plan
         where `moduleId` = #{moduleId};
     </select>
+
+    <!-- save -->
+    <insert id="save" parameterType="com.chinasoft.lgh.movies.datacollector.model.collect.Plan">
+        insert into t_collect_plan (<include refid="t_collect_plan_column"/> )
+        values (#{plan.id},#{plan.moduleId},#{plan.name},#{plan.description},#{plan.cron});
+    </insert>
 </mapper>

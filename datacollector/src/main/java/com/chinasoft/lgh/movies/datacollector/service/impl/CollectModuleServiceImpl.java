@@ -42,4 +42,9 @@ public class CollectModuleServiceImpl implements CollectModuleService {
         }
         return collectModuleMapper.deleteById(module.getId());
     }
+
+    @Override
+    public Module queryById(String moduleId) {
+        return collectModuleMapper.queryById(moduleId);
+    }
 }

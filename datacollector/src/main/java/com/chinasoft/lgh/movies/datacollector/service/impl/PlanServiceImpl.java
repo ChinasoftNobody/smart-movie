@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PlanServiceImpl implements PlanService {
@@ -21,5 +22,13 @@ public class PlanServiceImpl implements PlanService {
             return null;
         }
         return planMapper.queryByModuleId(moduleId);
+    }
+
+    @Override
+    public boolean createPlan(Plan plan) {
+        if(StringUtils.isEmpty(plan.getId())){
+            plan.setId(UUID.randomUUID().toString());
+        }
+        return planMapper.save(plan);
     }
 }

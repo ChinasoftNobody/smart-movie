@@ -26,4 +26,11 @@ public interface CollectModuleService {
      * @return flag
      */
     Boolean delete(Module module);
+
+    /**
+     * query by id
+     * @param moduleId moduleId
+     * @return module info
+     */
+    Module queryById(String moduleId);
 }

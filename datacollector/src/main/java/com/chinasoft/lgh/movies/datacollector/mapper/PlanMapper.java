@@ -15,4 +15,11 @@ public interface PlanMapper {
      * @return plans
      */
     List<Plan> queryByModuleId(@Param("moduleId") String moduleId);
+
+    /**
+     * save plan
+     * @param plan plan
+     * @return result
+     */
+    boolean save(@Param("plan") Plan plan);
 }

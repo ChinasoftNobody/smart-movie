@@ -35,4 +35,11 @@ public interface CollectModuleMapper {
      * @return result
      */
     Boolean deleteById(@Param("id") String id);
+
+    /**
+     * query by id
+     * @param id id
+     * @return module
+     */
+    Module queryById(@Param("id") String id);
 }

@@ -28,4 +28,10 @@
     <delete id="deleteById" parameterType="java.lang.String">
         delete from t_collect_module where id = #{id};
     </delete>
+
+    <!-- queryById -->
+    <select id="queryById" parameterType="java.lang.String" resultType="com.chinasoft.lgh.movies.datacollector.model.collect.Module">
+        select <include refid="t_collect_module_column"/> from t_collect_module
+        where `id` = #{id}
+    </select>
 </mapper>

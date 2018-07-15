@@ -11,4 +11,11 @@ public interface PlanService {
      * @return plans
      */
     List<Plan> queryByModuleId(String id);
+
+    /**
+     * create a plan
+     * @param plan plan
+     * @return result
+     */
+    boolean createPlan(Plan plan);
 }
